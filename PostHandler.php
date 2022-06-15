@@ -2,6 +2,7 @@
 
 require_once("DataBase.php");
 $data_base = new DataBase();
-var_dump($data_base->create($_POST["url"]));
-
+if(array_key_exists("url", $_POST)){
+    var_dump($data_base->create($_POST["url"]));
+}
 ?>
