@@ -7,11 +7,16 @@ class DataBase{
     public $database_name = "url_links";
 
     public function __construct(){
-        $this->conn = mysqli_connect($this->server_name,$this->username,$this->password,$this->database_name,4306);
+        require_once("config.php");
+        $this->conn = mysqli_connect(DB_HOST,DB_USER, DB_PASSWORD, DB_NAME,4306);
     }
     public function create($url){
+        require_once("config.php");
+        require_once("Shortener.php");
         //INSERT INTO `links` (`id`, `user_id`, `original_url`, `converted_url`) VALUES (NULL, '1', 'https://google.com', '1');
-        $query = "INSERT INTO `links` (`id`, `user_id`, `original_url`, `converted_url`) VALUES (NULL, '1', '". $url ."', '1');";
+        $last_id =mysqli_query($this->conn, "SELECT * FROM `links`");
+        return $last_id;
+        //$query = "INSERT INTO `links` (`id`, `user_id`, `original_url`, `converted_url`) VALUES (NULL, '1', '". $url ."', '". getShortenedURLFromID() ."');";
 
         mysqli_query($this->conn, $query);
         return $url;

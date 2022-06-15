@@ -6,26 +6,23 @@
   </head>
 
   <body>
-    <h1>URL Shortener Microservice</h1>
-    <h2>Short URL Creation</h2>
-    <p>
-      Example: <code>POST [project_url]/api/shorturl</code> -
-      <code>https://www.google.com</code>
-    </p>
+    <header>
+    <div class="top-container">
+      <h1> <a href="">Url Shortener</a></h1>
+    </div>
+  </header>
     <main>
-      <section>
+      <section class="url-box">
+        <h2> Paste the URL</h2>
         <form action="PostHandler.php" method="POST">
-          <fieldset>
-            <legend>URL Shortener</legend>
-            <label for="url_input">URL:</label>
             <input
               id="url_input"
               type="text"
               name="url"
-              placeholder="https://www.google.com"
+              placeholder="Enter the URL here"
             />
-            <input type="submit" value="POST URL" />
-          </fieldset>
+            <input type="submit" value="Shorten URL" />
+        
         </form>
       </section>
     </main>

@@ -6,16 +6,38 @@ body {
 	color: #222;
 	background-color: #FaFaFa;
 	text-align: center;
-	line-height: 1.4em;
+	line-height: 14em;
+  padding: 0;
+  margin: 0px;
+}
+main{
+  line-height: 4em;
+  margin: 0 auto 0 auto;
+  max-width: 1000px;
+}
+header{
+  line-height: 1.4rem;
+}
+.url-box{
+  line-height: 5em;
+  margin: 0 auto 20px auto;
+  box-shadow: 0 1px 4px #ccc;
+  max-width: 758px;
+  border-radius: 2px;
+}
+h1{
+  margin: 0;
+  font-size: 50px;
+}
+h2{
+  font-size: 30px;
+  margin: 0;
+  line-height: 2em;
 }
 
 .container {
 	padding: 0;
 	margin-top: 40px;
-}
-
-h3 {
-  margin-top: 30px;
 }
 
 .footer {
@@ -40,10 +62,11 @@ a {
 }
 
 form {
-  border: solid 1px black;
+  line-height: 2em;
+  display: table;
   border-radius: 5px;
-  margin: 10px auto;
-  padding: 20px;
+  margin: 0px auto 10px;
+  padding: 0px 20px 40px;
   max-width: 600px;
 }
 
@@ -53,9 +76,35 @@ label {
 
 input {
   padding: 5px;
+  line-height: 50px;
 }
 
 input[type=text] {
-  width: 220px;
+  width: 420px;
+  text-align: left;
+  padding: 5px 12px;
+}
+input[type=submit] {
+  background-color: #2574A9;
+  width: 120px;
+  color: #f9f9f9;
   text-align: center;
+  border-color: #2574A9;
+}
+
+.top-container{
+  padding: 50px 20px 35px;
+}
+
+a:link { 
+  text-decoration: none; 
+}
+a:visited { 
+  text-decoration: none; 
+}
+a:hover { 
+  text-decoration: none; 
+}
+a:active { 
+  text-decoration: none; 
 }
