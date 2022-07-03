@@ -1,8 +1,8 @@
 <?php 
 
 // database configuration
-define('DB_NAME',"url_links" );
-define('DB_USER', "root");
+define('DB_NAME',"url-shortener" );
+define('DB_USERNAME', "root");
 define('DB_PASSWORD', "");
 define('DB_HOST', "127.0.0.1");
 

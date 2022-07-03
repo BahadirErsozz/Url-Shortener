@@ -1,3 +1,7 @@
+<?php 
+if(!isset($_SESSION)) session_start();
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -14,7 +18,7 @@
     <main>
       <section class="url-box">
         <h2> Paste the URL</h2>
-        <form action="PostHandler.php" method="POST">
+        <form action="" method="POST">
             <input
               id="url_input"
               type="text"
@@ -22,8 +26,15 @@
               placeholder="Enter the URL here"
             />
             <input type="submit" value="Shorten URL" />
+            
         
         </form>
+        <div class="links">
+        <?php 
+        require "PostHandler.php";  
+        ?>
+        </div>
+
       </section>
     </main>
   </body>

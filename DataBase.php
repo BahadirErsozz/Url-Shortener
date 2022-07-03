@@ -1,45 +1,40 @@
 <?php 
 class DataBase{
-    public $conn;
-    public $server_name = "127.0.0.1";
-    public $username = "root";
-    public $password = "";
-    public $database_name = "url_links";
+    protected $conn;
 
     public function __construct(){
         require_once("config.php");
-        $mysqli = mysqli_connect(DB_HOST,DB_USER, DB_PASSWORD, DB_NAME,4306);
+        $mysqli = mysqli_connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME,4306);
         if($mysqli->connect_error){
             throw new Exception('Connect Error ' . $mysqli->connect_errno . ': ' . $mysqli->connect_error, $mysqli->connect_errno);
         }
         $this->conn = $mysqli;
     }
     public function create($url){
-        require_once("Shortener.php");
 
-        if($this->getUrlIfExists($url) != -1){
-            return $this->getUrlIfExists($url);
-        }
-
-        $last_id = $this->getLastId();
-        $shortened_url = getShortenedURLFromID($last_id + 1);
-        $query = "INSERT INTO `links` (`id`, `user_id`, `original_url`, `shortened_url`) VALUES (NULL, '', '". $url ."', '". $shortened_url ."');";
-        if(mysqli_query($this->conn, $query)){
+        if(!$this->validate_url($url)){
+            echo $url ." is not a valid url";
             return [
-                "shortened_url" => $shortened_url,
-                "response_code" => 200
+                "url_created" => false
             ];
         }
-        return [
-            "response_code" => 500,
-            "error_message" => "couldn't create the short URL"
-        ]; 
+        $shortened_url = substr(md5(microtime()), rand(0,26), 5);
+        $query = "INSERT INTO `url_links` (`id`, `user_id`, `original_url`, `shortened_url`) VALUES (NULL, '', '". $url ."', '". $shortened_url ."');";
+        if(mysqli_query($this->conn, $query)){
+            return [
+                "url_created" => true,
+                "short_url" => $shortened_url,
+                "original_url" => $url
+            ];
+            
+        }
+        throw new Exception("an error occured with the server");
         
     }
 
 
     public function getLastId(){
-        $result = mysqli_query($this->conn, "SELECT * FROM `links` ORDER BY `links`.`id` DESC");
+        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` ORDER BY `url_links`.`id` DESC");
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
         if($result == "NULL"){
             return 1;
@@ -47,13 +42,31 @@ class DataBase{
         return $result["id"];
     }
 
-    public function getUrlIfExists($url){
-        $result = mysqli_query($this->conn, "SELECT * FROM `links` WHERE `original_url` = '". $url ."'");
+    public function getOriginalUrlIfExists($url){
+        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` WHERE `original_url` = '". $url ."'");
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
         if($result == NULL){
             return -1;
         }
         return $result["shortened_url"];
     }
+    public function redirectToUrl($uri){
+        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` WHERE `shortened_url` = '". $uri ."'");
+        $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        if($result == NULL){
+            require '404.php';
+            return;
+        }
+        header("Location: " . $result["original_url"]);
+    }
+    function validate_url($url) {
+        // Remove all illegal characters from a url
+        $url = filter_var($url, FILTER_SANITIZE_URL);
+
+        // Validate url 
+        return filter_var($url, FILTER_VALIDATE_URL);
+
+    }
+
 }
 ?>
