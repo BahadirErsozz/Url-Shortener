@@ -6,10 +6,10 @@ if(!array_key_exists("urls", $_SESSION)){
     $_SESSION["urls"] = [];
 }
 
-require_once("DataBase.php");
-$data_base = new DataBase();
+require_once("DataBaseUrlLinks.php");
+$b = new DataBaseUrlLinks();
 if(array_key_exists("url", $_POST)){
-    $data = $data_base->create($_POST["url"]);
+    $data = $db->create($_POST["url"]);
     if($data["url_created"]){
         array_unshift($_SESSION["urls"], $data);
     }

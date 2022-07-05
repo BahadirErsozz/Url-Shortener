@@ -1,5 +1,6 @@
 <?php 
-class DataBase{
+class DataBaseUrlLinks{
+
     protected $conn;
 
     public function __construct(){
@@ -19,7 +20,7 @@ class DataBase{
             ];
         }
         $shortened_url = substr(md5(microtime()), rand(0,26), 5);
-        $query = "INSERT INTO `url_links` (`id`, `user_id`, `original_url`, `shortened_url`) VALUES (NULL, '', '". $url ."', '". $shortened_url ."');";
+        $query = "INSERT INTO `url_links` (`id`, `user_id`, `original_url`, `shortened_url`) VALUES (NULL, '', '". mysql_real_escape_string($url) ."', '". $shortened_url ."');";
         if(mysqli_query($this->conn, $query)){
             return [
                 "url_created" => true,
@@ -34,7 +35,7 @@ class DataBase{
 
 
     public function getLastId(){
-        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` ORDER BY `url_links`.`id` DESC");
+        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` ORDER BY `url_links`.`id` DESC;");
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
         if($result == "NULL"){
             return 1;
@@ -43,7 +44,7 @@ class DataBase{
     }
 
     public function getOriginalUrlIfExists($url){
-        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` WHERE `original_url` = '". $url ."'");
+        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` WHERE `original_url` = '". mysql_real_escape_string($url) ."';");
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
         if($result == NULL){
             return -1;
@@ -51,7 +52,7 @@ class DataBase{
         return $result["shortened_url"];
     }
     public function redirectToUrl($uri){
-        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` WHERE `shortened_url` = '". $uri ."'");
+        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` WHERE `shortened_url` = '". mysql_real_escape_string($uri) ."';");
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
         if($result == NULL){
             require '404.php';

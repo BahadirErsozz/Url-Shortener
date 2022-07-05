@@ -2,17 +2,17 @@
 $request = $_SERVER['REQUEST_URI'];
 switch ($request) {
     case '/' :
-        require  'index.php';
+        header("Location: index.php");
         break;
     case '' :
-        require  'index.php';
+        header("Location: index.php");
         break;
     case '/router.php':
-        require  'index.php';
+        header("Location: index.php");
         break;
     default:
-        require_once 'DataBase.php';
-        $db = new DataBase();
+        require_once 'DataBaseUrlLinks.php';
+        $db = new DataBaseUrlLinks();
         $db->redirectToUrL($_GET["query"]);
         break;
 }

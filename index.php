@@ -1,5 +1,10 @@
 <?php 
 if(!isset($_SESSION)) session_start();
+
+if(array_key_exists("logout", $_POST)){
+  session_unset();
+  session_destroy();
+}
 ?>
 
 <!DOCTYPE html>
@@ -11,6 +16,32 @@ if(!isset($_SESSION)) session_start();
 
   <body>
     <header>
+      <div class="top-menu">
+        <?php 
+          if(!array_key_exists("user_id", $_SESSION)){
+            echo "
+              <button type=\"button\">
+                <a href=\"login.php\">login
+                </a>
+              </button>
+              <button type=\"button\">
+                <a href=\"register.php\">register
+                </a>
+              </button>  
+            ";
+          }
+          else{
+            echo "<div style=\"display: flex;\">
+              <p style=\"padding: 2px; margin: 5px 0px;\"> Welcome ". $_SESSION["username"] ." </p> 
+              <form method=\"POST\" style=\"padding: 0px 10px;\">
+                <input type=\"submit\" name=\"logout\" value=\"logout\" style=\"all: revert; padding: 0px;\" />
+              </form>
+              </div>
+            ";
+          }
+          
+        ?>
+      </div>
     <div class="top-container">
       <h1> <a href="">Url Shortener</a></h1>
     </div>
