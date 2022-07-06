@@ -19,7 +19,7 @@ class DataBaseUrlLinks{
                 "url_created" => false
             ];
         }
-        $shortened_url = substr(md5(microtime()), rand(0,26), 5);
+        $shortened_url = substr(md5(microtime()), rand(0,26), URI_LENGTH);
         $query = $this->conn->prepare("INSERT INTO `url_links` (`id`, `user_id`, `original_url`, `shortened_url`) VALUES (NULL, ?, ?, ?);");
         // have to create a variable because bind_param function requires it
         $user_id = array_key_exists("user_id", $_SESSION) ? $_SESSION["user_id"] : -1;

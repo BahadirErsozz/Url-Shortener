@@ -20,11 +20,11 @@ if(array_key_exists("logout", $_POST)){
         <?php 
           if(!array_key_exists("user_id", $_SESSION)){
             echo "
-              <button type=\"button\">
+              <button type=\"button\" class=\"top-button\">
                 <a href=\"login.php\">login
                 </a>
               </button>
-              <button type=\"button\">
+              <button type=\"button\" class=\"top-button\">
                 <a href=\"register.php\">register
                 </a>
               </button>  
@@ -34,7 +34,7 @@ if(array_key_exists("logout", $_POST)){
             echo "<div style=\"display: flex;\">
               <p style=\"padding: 2px; margin: 5px 0px;\"> Welcome ". $_SESSION["username"] ." </p> 
               <form method=\"POST\" style=\"padding: 0px 10px;\">
-                <input type=\"submit\" name=\"logout\" value=\"logout\" style=\"all: revert; padding: 0px;\" />
+                <input type=\"submit\" name=\"logout\" value=\"logout\" style=\"all: revert; padding: 10px 20px;\" />
               </form>
               </div>
             ";

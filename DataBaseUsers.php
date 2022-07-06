@@ -24,7 +24,7 @@ class DataBaseUsers{
                 "error_message" => "username does not exist"
             ];
         }
-        if($user["password"] != $password){
+        if($user["password"] != md5($password)){
             return[
                 "error_code" => 401,
                 "error_message" => "wrong password"
@@ -78,9 +78,8 @@ class DataBaseUsers{
                 "error_message" => "you can only create one account per email"
             ];
         }
-        $password = md5($password);
         $query = $this->conn->prepare("INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `created_at`) VALUES (NULL, ?, ?, ?, ". "current_timestamp()" . ");");
-        $query->bind_param("sss", $username, $password, $email);
+        $query->bind_param("sss", $username, md5($password), $email);
         $result = $query->execute();
         if($result){
             return $this->login($username, $password);
