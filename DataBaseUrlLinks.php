@@ -20,8 +20,11 @@ class DataBaseUrlLinks{
             ];
         }
         $shortened_url = substr(md5(microtime()), rand(0,26), 5);
-        $query = "INSERT INTO `url_links` (`id`, `user_id`, `original_url`, `shortened_url`) VALUES (NULL, '". (array_key_exists("user_id", $_SESSION) ? $_SESSION["user_id"] : "") ."', '". $url ."', '". $shortened_url ."');";
-        if(mysqli_query($this->conn, $query)){
+        $query = $this->conn->prepare("INSERT INTO `url_links` (`id`, `user_id`, `original_url`, `shortened_url`) VALUES (NULL, ?, ?, ?);");
+        // have to create a variable because bind_param function requires it
+        $user_id = array_key_exists("user_id", $_SESSION) ? $_SESSION["user_id"] : -1;
+        $query->bind_param("iss", $user_id, $url, $shortened_url);
+        if($query->execute()){
             return [
                 "url_created" => true,
                 "shortened_url" => $shortened_url,
@@ -44,7 +47,11 @@ class DataBaseUrlLinks{
     }
 
     public function getOriginalUrlIfExists($url){
-        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` WHERE `original_url` = '". $url ."';");
+        $query = $this->conn->prepare("SELECT * FROM `url_links` WHERE `original_url` = ?;");
+        $query->bind_param("s", $url);
+        $query->execute();
+        $result = $query->get_result();
+        //$result = mysqli_query($this->conn, "SELECT * FROM `url_links` WHERE `original_url` = '". $url ."';");
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
         if($result == NULL){
             return -1;
@@ -52,7 +59,10 @@ class DataBaseUrlLinks{
         return $result["shortened_url"];
     }
     public function redirectToUrl($uri){
-        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` WHERE `shortened_url` = '". $uri ."';");
+        $query = $this->conn->prepare("SELECT * FROM `url_links` WHERE `shortened_url` = ?;");
+        $query->bind_param("s", $uri);
+        $query->execute();
+        $result = $query->get_result();
         $result = mysqli_fetch_array($result, MYSQLI_ASSOC);
         if($result == NULL){
             require '404.php';
@@ -69,7 +79,11 @@ class DataBaseUrlLinks{
 
     }
     function getUrlsByUserId($user_id){
-        $result = mysqli_query($this->conn, "SELECT * FROM `url_links` WHERE `user_id` = '". $user_id ."';");
+        $query = $this->conn->prepare("SELECT * FROM `url_links` WHERE `user_id` = ?;");
+        $query->bind_param("i", $user_id);
+        $query->execute();
+        $result = $query->get_result();
+
         $toReturn = [];
         if($result){
             // Cycle through results

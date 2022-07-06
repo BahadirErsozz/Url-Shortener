@@ -13,7 +13,10 @@ class DataBaseUsers{
     }
 
     public function login($username, $password){
-        $user = mysqli_query($this->conn, "SELECT * FROM `users` WHERE `username` = '" . $username . "';");
+        $query = $this->conn->prepare("SELECT * FROM `users` WHERE `username` = ?;");
+        $query->bind_param("s", $username);
+        $query->execute();
+        $user = $query->get_result();
         $user = mysqli_fetch_array($user, MYSQLI_ASSOC);
         if($user == NULL){
             return [
@@ -21,7 +24,7 @@ class DataBaseUsers{
                 "error_message" => "username does not exist"
             ];
         }
-        if($user["password"] != md5($password)){
+        if($user["password"] != $password){
             return[
                 "error_code" => 401,
                 "error_message" => "wrong password"
@@ -53,7 +56,10 @@ class DataBaseUsers{
                 'error_message' => "invalid email format"
             ];
         }
-        $user = mysqli_query($this->conn, "SELECT * FROM `users` WHERE `username` = '" . $username . "';");
+        $query = $this->conn->prepare("SELECT * FROM `users` WHERE `username` = ?;");
+        $query->bind_param("s", $username);
+        $query->execute();
+        $user = $query->get_result();
         $user = mysqli_fetch_array($user, MYSQLI_ASSOC);
         if($user != NULL){
             return [
@@ -61,8 +67,10 @@ class DataBaseUsers{
                 "error_message" => "username is already taken"
             ];
         }
-
-        $user = mysqli_query($this->conn, "SELECT * FROM `users` WHERE `email` = '" . $email . "';");
+        $query = $this->conn->prepare("SELECT * FROM `users` WHERE `email` = ?;");
+        $query->bind_param("s", $email);
+        $query->execute();
+        $user = $query->get_result();
         $user = mysqli_fetch_array($user, MYSQLI_ASSOC);
         if($user != NULL){
             return [
@@ -71,8 +79,9 @@ class DataBaseUsers{
             ];
         }
         $password = md5($password);
-        $result = mysqli_query($this->conn, "INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `created_at`) VALUES (NULL, '$username', '$password', '$email', ". "current_timestamp()" . ");");
-
+        $query = $this->conn->prepare("INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `created_at`) VALUES (NULL, ?, ?, ?, ". "current_timestamp()" . ");");
+        $query->bind_param("sss", $username, $password, $email);
+        $result = $query->execute();
         if($result){
             return $this->login($username, $password);
         }
